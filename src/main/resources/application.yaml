@@ -16,7 +16,7 @@ spring:
       hibernate.format_sql: true
   mail:
     host: smtp-relay.brevo.com
-    port: 587
+    port: 2525
     username: ${BREVO_USERNAME}
     password: ${BREVO_PASSWORD}
     properties:

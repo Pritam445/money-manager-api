@@ -26,7 +26,7 @@ public class JwtUtil {
     private String SECRET;
     private SecretKey key;
 
-    private final long accessTokenValidity = TimeUnit.HOURS.toMillis(1);
+    private final long accessTokenValidity = TimeUnit.HOURS.toMillis(24);
     private JwtParser jwtParser;
 
     private final String TOKEN_HEADER = "Authorization";

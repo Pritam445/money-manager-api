@@ -2,6 +2,7 @@ package com.money.manage.controller;
 
 import com.money.manage.dto.AuthDTO;
 import com.money.manage.dto.ProfileDTO;
+import com.money.manage.entity.ProfileEntity;
 import com.money.manage.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -65,8 +66,18 @@ public class ProfileController {
 
     }
 
+    @GetMapping("/info")
+    public ResponseEntity<ProfileDTO> getPublicProfile() {
+        ProfileDTO publicProfile = profileService.getPublicProfile(null);
+        return ResponseEntity.ok(publicProfile);
+    }
+
     @GetMapping("/test")
     public String test() {
         return "Test Successful";
     }
+
+
+
+
 }

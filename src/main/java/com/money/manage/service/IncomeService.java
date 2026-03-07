@@ -21,4 +21,5 @@ public interface IncomeService {
     List<IncomeDTO> getIncomeForUserOnDate(String profileId, LocalDate date);
     ByteArrayInputStream exportIncomeToExcel(List<IncomeDTO> incomes);
 
+
 }

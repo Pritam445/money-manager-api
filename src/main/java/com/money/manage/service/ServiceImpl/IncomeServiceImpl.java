@@ -9,8 +9,10 @@ import com.money.manage.repository.CategoryRepository;
 
 import com.money.manage.repository.IncomeRepository;
 
+import com.money.manage.service.EmailService;
 import com.money.manage.service.IncomeService;
 import com.money.manage.service.ProfileService;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -35,6 +37,7 @@ public class IncomeServiceImpl implements IncomeService {
     private  final IncomeRepository incomeRepository ;
     private final ProfileService profileService;
 
+
     private IncomeDTO toDTO(IncomeEntity entity){
 
         return IncomeDTO.builder()
@@ -50,6 +53,8 @@ public class IncomeServiceImpl implements IncomeService {
                 .build();
 
     }
+
+
 
     private IncomeEntity toEntity(CategoryEntity category, ProfileEntity profileEntity, IncomeDTO expenseDTO) {
 

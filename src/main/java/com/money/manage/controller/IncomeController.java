@@ -2,6 +2,7 @@ package com.money.manage.controller;
 
 import com.money.manage.dto.ExpenseDTO;
 import com.money.manage.dto.IncomeDTO;
+import com.money.manage.service.EmailService;
 import com.money.manage.service.IncomeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
@@ -23,6 +24,7 @@ import java.util.List;
 public class IncomeController {
 
     private final IncomeService incomeService;
+    private final EmailService emailService;
 
     @PostMapping("/add")
     public ResponseEntity<IncomeDTO> addExpense(@RequestBody IncomeDTO incomeDTO){
@@ -70,4 +72,26 @@ public class IncomeController {
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(file);
     }
+
+    @GetMapping("/email")
+    public ResponseEntity<String> sendIncomeReport(@RequestParam String email)
+            throws Exception {
+
+        List<IncomeDTO> incomes = incomeService.getCurrentMonthIncomesForCurrentUser();
+
+        ByteArrayInputStream excelFile =
+                incomeService.exportIncomeToExcel(incomes);
+
+        emailService.sendEmailWithFile(
+                email,
+                "Your Income Report",
+                "Please find attached your income report.",
+                excelFile,
+                "income-report.xlsx"
+        );
+
+        return ResponseEntity.ok("Email sent successfully");
+    }
+
+
 }

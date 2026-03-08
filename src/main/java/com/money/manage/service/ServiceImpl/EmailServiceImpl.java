@@ -42,12 +42,7 @@ public class EmailServiceImpl implements EmailService {
 
             helper.addAttachment(
                     fileName,
-                    new InputStreamSource() {
-                        @Override
-                        public java.io.InputStream getInputStream() {
-                            return attachment;
-                        }
-                    }
+                    new org.springframework.core.io.ByteArrayResource(attachment.readAllBytes())
             );
 
             javaMailSender.send(message);

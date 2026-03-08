@@ -3,8 +3,10 @@ package com.money.manage.controller;
 import com.money.manage.dto.ExpenseDTO;
 import com.money.manage.dto.FilterDTO;
 import com.money.manage.dto.IncomeDTO;
+import com.money.manage.entity.ProfileEntity;
 import com.money.manage.service.ExpenseService;
 import com.money.manage.service.IncomeService;
+import com.money.manage.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +25,13 @@ public class FilterController {
 
     private final ExpenseService expenseService;
     private final IncomeService incomeService;
+    private final ProfileService profileService;
 
     @PostMapping
     public ResponseEntity<?> filterTransactions(@RequestBody FilterDTO filter){
-        LocalDate startDate = filter.getStartDate() != null ? filter.getStartDate() : LocalDate.MIN;
+
+        ProfileEntity currentProfile = profileService.getCurrentProfile();
+        LocalDate startDate = filter.getStartDate() != null ? filter.getStartDate() : currentProfile.getCreatedAt().toLocalDate();
         LocalDate endDate = filter.getEndDate() != null ? filter.getEndDate() : LocalDate.now();
         String keyword = filter.getKeyword() != null ? filter.getKeyword() : "";
         String sortField = filter.getSortField() != null ? filter.getSortField() : "date";

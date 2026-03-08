@@ -157,10 +157,10 @@ public class IncomeServiceImpl implements IncomeService {
 
                 Row row = sheet.createRow(rowIdx++);
 
-                row.createCell(0).setCellValue(income.getName());
-                row.createCell(1).setCellValue(income.getCategoryName());
-                row.createCell(2).setCellValue(income.getAmount().doubleValue());
-                row.createCell(3).setCellValue(income.getDate().toString());
+                row.createCell(0).setCellValue(income.getName() != null ? income.getName() : "N/A" );
+                row.createCell(1).setCellValue(income.getCategoryName() != null ? income.getCategoryName() : "N/A");
+                row.createCell(2).setCellValue(income.getAmount() != null ? income.getAmount().doubleValue() : 0);
+                row.createCell(3).setCellValue(income.getDate() != null ? income.getDate().toString() : "N/A");
             }
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();

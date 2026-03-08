@@ -1,6 +1,7 @@
 package com.money.manage.service.ServiceImpl;
 
 import com.money.manage.dto.ExpenseDTO;
+import com.money.manage.dto.IncomeDTO;
 import com.money.manage.entity.CategoryEntity;
 import com.money.manage.entity.ExpenseEntity;
 import com.money.manage.entity.ProfileEntity;
@@ -10,9 +11,17 @@ import com.money.manage.service.CategoryService;
 import com.money.manage.service.ExpenseService;
 import com.money.manage.service.ProfileService;
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -87,6 +96,42 @@ public class ExpenseServiceImpl implements ExpenseService {
         List<ExpenseEntity> list =expenseRepository.findByProfileIdAndDate(profileId,date);
 
         return list.stream().map(this::toDTO).toList();
+    }
+
+    @Override
+    public ByteArrayInputStream exportIncomeToExcel(List<ExpenseDTO> expenses) {
+        String[] columns = {"Name", "Category", "Amount", "Date"};
+
+        try (Workbook workbook = new XSSFWorkbook()) {
+
+            Sheet sheet = workbook.createSheet("Income");
+
+            Row headerRow = sheet.createRow(0);
+
+            for (int i = 0; i < columns.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(columns[i]);
+            }
+
+            int rowIdx = 1;
+
+            for (ExpenseDTO expense : expenses) {
+
+                Row row = sheet.createRow(rowIdx++);
+
+                row.createCell(0).setCellValue(expense.getName() != null ? expense.getName() : "N/A" );
+                row.createCell(1).setCellValue(expense.getCategoryName() != null ? expense.getCategoryName() : "N/A");
+                row.createCell(2).setCellValue(expense.getAmount() != null ? expense.getAmount().doubleValue() : 0);
+                row.createCell(3).setCellValue(expense.getDate() != null ? expense.getDate().toString() : "N/A");
+            }
+
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            workbook.write(out);
+
+            return new ByteArrayInputStream(out.toByteArray());
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to export expense data to Excel", e);
+        }
     }
 
     @Override
